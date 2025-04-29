@@ -14,7 +14,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum tipo_trnsacao {
+enum tipo_transacao {
   credito
   debito
 }
@@ -29,11 +29,11 @@ model User {
 }
 
 model Transacao {
-  id             String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  data_transacao DateTime      @default(now())
-  valor          Decimal       @db.Decimal(14, 2)
-  tipo_transacao tipo_trnsacao
-  taxa           Decimal       @db.Decimal(5, 2)
-  parcelas       Int           @default(1)
+  id             String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  data_transacao DateTime       @default(now())
+  valor          Decimal        @db.Decimal(14, 2)
+  tipo_transacao tipo_transacao
+  taxa           Decimal        @db.Decimal(5, 2)
+  parcelas       Int            @default(1)
   cliente        User[]
 }

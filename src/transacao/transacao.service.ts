@@ -1,26 +1,38 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTransacaoDto } from './dto/create-transacao.dto';
-import { UpdateTransacaoDto } from './dto/update-transacao.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class TransacaoService {
-  create(createTransacaoDto: CreateTransacaoDto) {
-    return 'This action adds a new transacao';
+  constructor(private readonly prisma: PrismaService) {}
+
+  async create(createTransacaoDto: CreateTransacaoDto) {
+    return this.prisma.transacao.create({
+      data: {
+        taxa: createTransacaoDto.taxa,
+        tipo_transacao: createTransacaoDto.tipo_transacao,
+        valor: createTransacaoDto.valor,
+        parcelas: createTransacaoDto.parcelas,
+        cliente: { connect: { id: createTransacaoDto.cliente } },
+      },
+    });
   }
 
-  findAll() {
-    return `This action returns all transacao`;
+  async findAll() {
+    return this.prisma.transacao.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} transacao`;
-  }
-
-  update(id: number, updateTransacaoDto: UpdateTransacaoDto) {
-    return `This action updates a #${id} transacao`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} transacao`;
+  async findOne(id: string) {
+    const transacao = await this.prisma.transacao.findUnique({
+      where: { id },
+    });
+    if (!transacao) {
+      throw new NotFoundException({
+        message: 'Usuário não encontrado',
+        error: 'Not found',
+        statusCode: 404,
+      });
+    }
+    return transacao;
   }
 }
