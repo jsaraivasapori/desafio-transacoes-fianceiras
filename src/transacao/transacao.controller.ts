@@ -1,6 +1,7 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Query } from '@nestjs/common';
 import { TransacaoService } from './transacao.service';
 import { CreateTransacaoDto } from './dto/create-transacao.dto';
+import { tipo_transacao } from '@prisma/client';
 
 @Controller('transacao')
 export class TransacaoController {
@@ -19,5 +20,22 @@ export class TransacaoController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.transacaoService.findOne(id);
+  }
+  @Get('listar')
+  findTransationByUser(
+    @Query('dataInicio,dataFim,tipo_transacao') dataInicio: string,
+    dataFim: string,
+    tipo_transacao: tipo_transacao,
+  ) {
+    return this.transacaoService.findByFilter(
+      dataInicio,
+      dataFim,
+      tipo_transacao,
+    );
+  }
+
+  @Get('resumoAnalitico')
+  showResumoAnalitico() {
+    return this.transacaoService.populateRelatorioAnalitico();
   }
 }

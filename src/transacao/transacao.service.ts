@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTransacaoDto } from './dto/create-transacao.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { tipo_transacao } from '@prisma/client';
 
 @Injectable()
 export class TransacaoService {
@@ -34,5 +35,35 @@ export class TransacaoService {
       });
     }
     return transacao;
+  }
+
+  async findByFilter(
+    dataInicio: string,
+    dataFim: string,
+    tipo_transacao: tipo_transacao,
+  ) {
+    return await this.prisma.transacao.findMany({
+      where: {
+        data_transacao: {
+          gte: dataInicio,
+          lte: dataFim,
+        },
+        tipo_transacao: tipo_transacao,
+      },
+    });
+  }
+
+  async populateRelatorioAnalitico() {
+    const transacoes = await this.prisma.transacao.findMany({});
+    const quantidadeVendas = await this.prisma.transacao.count();
+    let valorBruto;
+    for (const element of transacoes) {
+      valorBruto += element.valor;
+    }
+
+    return {
+      valorBruto,
+      quantidadeVendas,
+    };
   }
 }
