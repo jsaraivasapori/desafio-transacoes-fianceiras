@@ -20,7 +20,7 @@
 </p>
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
+# As porcentagens estão em decima. 10% no meu back equivale a 0.1
 ## Description
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
